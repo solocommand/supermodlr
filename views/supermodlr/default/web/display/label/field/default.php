@@ -1,5 +1,5 @@
 <?php
 if (!$field->hidden)
 { ?>
-	<div class='label' title='<?=$field->description; ?>'><?=$field->label; ?></div><?php
+	<dt class='label' title='<?=$field->description; ?>'><?=$field->label; ?></dt><?php
 }

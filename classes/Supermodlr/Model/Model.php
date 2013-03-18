@@ -338,6 +338,7 @@ EOF;
      */
     public function save_class_file($full_file_path, $file_contents)
     {
+        fbl('SAVE CLASS FILE');
         $file_info = pathinfo($full_file_path);
         if (!is_dir($file_info['dirname']))
         {

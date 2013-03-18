@@ -105,9 +105,13 @@ class Controller extends Kohana_Controller {
         
         $model_data = $Model->to_array(TRUE,TRUE);
 
+        fbl($Model, 'model_data');
+
         //loop through all fields
         foreach ($fields as $Field)
         {
+
+            fbl($Field, 'field');
             //do not put pk in template ?? @todo think about this
             if ($Field->name == $Model->cfg('pk_name')) {
                 continue;

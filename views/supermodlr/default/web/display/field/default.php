@@ -1,1 +1,1 @@
-<?php if ($field->value_isset()) echo $field->value; ?>
+<dd><?php if ($field->value_isset()) echo $field->value; ?></dd>

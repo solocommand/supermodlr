@@ -1,4 +1,4 @@
-<div id="<?php echo $field->get_model_name(); ?>__field__<?php echo $field->path('_'); ?>__container"<?php 
+<dl class="dl-horizontal" id="<?php echo $field->get_model_name(); ?>__field__<?php echo $field->path('_'); ?>__container"<?php 
 if ($field->hidden || (isset($field->conditions) && is_array($field->conditions) && isset($field->conditions['$hidden']) && $field->conditions['$hidden'])) 
 { 
     ?> style="display:none"<?php } 
@@ -8,4 +8,4 @@ if ($field->hidden || (isset($field->conditions) && is_array($field->conditions)
 echo $view->get('label',$field); 
 echo $view->get('field',$field);
 ?>
-</div>
+</dl>
