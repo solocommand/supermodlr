@@ -1,8 +1,72 @@
 <?php
-//select box
+
+// Input type detection
+
 if (isset($field->values) && is_array($field->values) && count($field->values) > 0)
 {
-    //
+
+    $input_type = 'select';
+
+    $template = <<<EOT
+        <select ng-model="{$field->path('_')}">
+            <option ng-repeat="value in fields.{$field->path('_')}.values">{{value}}</option>
+        </select>
+EOT;
+
+}
+else
+{
+
+    
+    if ($field->storage === 'single')
+    {
+
+        //if this field needs to be a number
+        if ($field->datatype === 'int' || $field->datatype === 'float' || $field->datatype === 'timestamp' || (is_array($field->validation) && (in_array(array('numeric'),$field->validation) || in_array(array('decimal'),$field->validation) || in_array(array('digit'),$field->validation)))) 
+        {
+            $input_type = 'number';
+        }
+        //check for email
+        else if (is_array($field->validation) && in_array('email',$field->validation) )
+        {
+            $input_type = 'email';
+        }
+        //check for url 
+        else if (is_array($field->validation) && in_array('url',$field->validation) )
+        {
+            $input_type = 'url';
+        }
+        else if ($field->name == 'password') //@todo better way to decide this or just make a password template
+        {
+            $input_type = 'password';
+        }   
+        //default to text
+        else
+        {
+            $input_type = 'text';
+        }
+
+    }
+
+    else
+    {
+
+        $input_type = 'hidden';
+
+    }
+
+
+    $template = <<<EOT
+
+        <input type="{$input_type}" ng-model="{$field->path('_')}" />
+
+EOT;
+
+}
+
+echo $template;
+
+/*    //
 ?><select ui-select2 class='input input-medium' id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>" name="field__<?=$field->path('_'); ?>" 
         ng-model="data.<?=$field->get_model_name(); ?>.<?=$field->path('.'); ?>" 
         <?php if ($field->nullvalue !== FALSE || $field->value_isset() || $field->defaultvalue) 
@@ -164,3 +228,4 @@ if ($field->readonly && $field->value_isset())
 <?php
 
 }
+*/

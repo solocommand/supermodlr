@@ -1,3 +1,15 @@
+<dl class="dl-horizontal" id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>__container"<?php
+    if (!$field->value_isset() && $model->loaded() && isset($model->extends) && $model->extends === NULL || $field->hidden)
+        {
+            echo ' style="display: none"';
+        } 
+
+        ?> >
+
+        <?= $view->get('label',$field); ?>
+
+    <dd>
+
 <?php 
 $inherited = NULL;
 if (in_array($field->name, $model->cfg('inherited')) && $model->loaded())
@@ -20,10 +32,10 @@ if (!$field->hidden && !in_array($field->name, $model->cfg('uninherited'))) {
 $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__inheritcb').on('change',function(){
     if ($(this).is(':checked')) {
         //show field so it can be edited
-        $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__container').hide();
+        $(this).closest('dd').next('.field').hide();
     } else {
         //hide field so it cannot be edited
-        $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__container').show();
+        $(this).closest('dd').next('.field').show();
 
         //unset the scope value
         var scope = angular.element($('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>')[0]).scope();
@@ -36,15 +48,12 @@ $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__inheritcb').on('change',fu
 </script><?php
 } 
 ?>
-<div id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>__container"<?php
-        if (!$field->value_isset() && $model->loaded() && isset($model->extends) && $model->extends === NULL || $field->hidden)
-            {
-                echo ' style="display: none"';
-            } 
-        ?> > <?php 
-echo $view->get('label',$field); 
-echo $view->get('field',$field); 
-echo $view->get('errors',$field); 
-echo $view->get('conditions',$field); 
-?>
-</div>
+
+    </dd>
+
+    <dd class="field" <?php if ($inherited === TRUE) echo 'style="display:none;"'; ?> ><?= $view->get('field',$field); ?></dd>
+
+    <?= $view->get('errors',$field); ?>
+    <?= $view->get('conditions',$field); ?>
+
+</dl>

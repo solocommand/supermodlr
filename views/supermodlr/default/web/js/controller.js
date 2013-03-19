@@ -40,12 +40,13 @@ var app = angular.module('supermodlr', ['modelService']);
 angular.module('modelService', ['ngResource']).factory('ModelService', function ($resource) {
     return $resource(
     	'/supermodlr/api/:model_name/:action/:pk_id',
-    	{ model_name:'@model_name', 'action' : '@action', 'pk_id': '@pk_id' },
+    	{ model_name:'@model_name', action : '@action', pk_id: '@pk_id' },
     	{
 	      'create': { method: 'POST', params: { action: 'create' } },
-	      'read'  : { method: 'GET',  params: { action: 'read'   } },
+	      'read'  : { method: 'GET',  params: { action: 'read'   }, isArray: false },
 	      'update': { method: 'POST', params: { action: 'update' } },
 	      'delete': { method: 'POST', params: { action: 'delete' } },
+	      'query' : { method: 'GET',	 params: { action: 'query', q: '@query' }, isArray: true }
     	}
     );
  });
@@ -53,19 +54,48 @@ angular.module('modelService', ['ngResource']).factory('ModelService', function 
 
 /* CONTROLLERS */
 
-app.controller('supermodlrCtrl', function supermodlrCtrl($scope, ModelService) {
+app.controller('supermodlrCtrl', function ($scope, ModelService) {
 
 	// Initially populate scope with model name, id, and action
 	$scope.model_name = getModel();
 	$scope.pk_id 		= getModelId();
 	$scope.action 		= getAction();
 
-	// Update scope with results from service.
-	$scope.model = ModelService[$scope.action]($scope);
+	$scope.readModel = function() {
 
-	console.log($scope.model);
+		// Get model from modelService service. Force read method, pass model name and ID.
+
+		$scope.action = 'read';
+		ModelService.read({
+			model_name: $scope.model_name,
+			pk_id: 		$scope.pk_id
+		}, function(response) { for (var prop in response) { $scope[prop] = response[prop]; } });
+
+	
+	}
+
+	$scope.save = function() {
+		ModelService.update();
+	}
+
+	$scope.readModel();
+
+
+
+	
+
+	// Update scope with results from service.
+	//$scope.response 	= ModelService[$scope.action]();
+	console.log($scope);
 
 });
+
+
+// app.directive('supermodlrForm', function supermodlrForm($scope) {
+
+
+
+// });
 
 	
 // function supermodlrCtrl($scope, $resource, $http) {

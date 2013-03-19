@@ -86,10 +86,10 @@ class Controller_Supermodlr_Api extends Controller {
         //set content type header
         $this->response->headers('content-type','application/json');        
         
-        $this->log_response(json_encode($Model->to_array()));
+        $this->log_response(json_encode($Model->to_array(TRUE, FALSE, TRUE)));
 
         //return result     
-        $this->response->body(json_encode($Model->to_array()));
+        $this->response->body(json_encode($Model->to_array(TRUE, FALSE, TRUE)));
     }   
     
     public function action_update()

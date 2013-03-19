@@ -1203,13 +1203,15 @@ abstract class Supermodlr_Core {
     /**
      * @returns array all public columns and fields (skips hidden/cfg properties)
      */
-    public function to_array($check_access = TRUE,$display = FALSE)
+    public function to_array($check_access = TRUE,$display = FALSE, $field_values = FALSE)
     {
+
         //set all defaults on object
         $this->defaults();
         //filter all values
         $this->filter();
         $fields = $this->get_fields();
+
         $cols = array();
         //loop through all set values
         foreach ($this as $col => $val)
@@ -1242,6 +1244,17 @@ abstract class Supermodlr_Core {
             }
             $cols[$col] = $val;
         }
+
+        if($field_values) {
+
+            $cols['fields'] = [];
+
+            foreach($fields as $key => $val) {
+                $cols['fields'][$key] = array('value' => $val->value, 'values' => $val->values);
+            }
+            
+        }
+
         //return array of values
         return $cols;
     }

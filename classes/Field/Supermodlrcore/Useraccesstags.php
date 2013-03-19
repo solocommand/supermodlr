@@ -19,4 +19,5 @@ class Field_Supermodlrcore_Useraccesstags extends Field implements Interface_Fie
     public $core = TRUE;
     public $defaultvalue = array('auth');
     public $stored = FALSE;
+    public $description = 'User Access Tags';
 }
