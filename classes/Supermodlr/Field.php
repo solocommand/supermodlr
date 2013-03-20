@@ -672,6 +672,14 @@ class Supermodlr_Field {
 		else
 			return "'".$value."'";
 	}
+
+  public function to_array() {
+
+		foreach ($this as $col => $val) $response[$col] = $val;
+
+    return $response;
+
+  }
    
 
 }

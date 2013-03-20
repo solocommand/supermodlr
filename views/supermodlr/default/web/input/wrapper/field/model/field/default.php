@@ -21,7 +21,7 @@
 
 ?>
 
-<dl class="dl-horizontal" id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>__container" style="<?= $style ?>">
+<dl class="dl-horizontal" style="<?= $style ?>" ng-controller="fieldCtrl" ng-init="field.name=<?=$field->path('_'); ?>">
 
     <?= $view->get('label',$field); ?>
 
@@ -60,7 +60,7 @@
 ?>
         <div id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>__inherit" class='<?=$form_id; ?>inherit_container inherit_container' style="<?= $inherit_style; ?>">
             <label class="checkbox">
-                <input id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>__inheritcb" type="checkbox" <?= $inherit_checked; ?> />
+                <input id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>__inheritcb" type="checkbox" <?= $inherit_checked; ?> inherit-checkbox="<?=$field->path('_'); ?>" />
                 Inherit <?= $field->name; ?>?
             </label>
         </div>
@@ -69,15 +69,20 @@
         <script type="text/javascript">
         $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__inheritcb').on('change',function(){
             if ($(this).is(':checked')) {
-                //show field so it can be edited
+
+                // Hide field so it cannot be edited
                 $(this).closest('dd').next('.field').hide();
+
             } else {
-                //hide field so it cannot be edited
+
+                // Show field so it can be edited
                 $(this).closest('dd').next('.field').show();
 
-                //unset the scope value
-                // var scope = angular.element($('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>')[0]).scope();
-                // delete (scope.data.<?php echo $field->get_model_name(); ?>.<?php echo $field->path('.'); ?>);
+                // Unset the scope value
+                /** 
+                * var scope = angular.element($('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>')[0]).scope();
+                * delete (scope.data.<?php echo $field->get_model_name(); ?>.<?php echo $field->path('.'); ?>);
+                */
                 console.log('@todo: unset scope value');
                 console.log('@todo: create directive for field inheritance.')
 

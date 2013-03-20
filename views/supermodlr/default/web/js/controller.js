@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('supermodlr', ['modelService']);
+var app = angular.module('supermodlr', ['modelService', 'fieldService']);
 
 /* SERVICES */
 
@@ -51,6 +51,14 @@ angular.module('modelService', ['ngResource']).factory('ModelService', function 
     );
  });
 
+angular.module('fieldService', ['ngResource']).factory('FieldService', function ($resource) {
+    return $resource(
+    	'/supermodlr/api/:model_name/field_data/:pk_id/:fieldname',
+    	{ model_name:'@model_name', pk_id: '@pk_id', fieldname: '@fieldname' },
+    	{}
+    );
+ });
+
 
 /* CONTROLLERS */
 
@@ -87,6 +95,33 @@ app.controller('supermodlrCtrl', function ($scope, ModelService) {
 	// Update scope with results from service.
 	//$scope.response 	= ModelService[$scope.action]();
 	console.log($scope);
+
+});
+
+/**
+* Field Controller
+* Provides access to FieldService module
+*
+*/
+app.controller('fieldCtrl', function ($scope, FieldService) {
+
+	$scope.field = [];
+	$scope.field.name = 'test';
+
+	console.log('fieldname scope prop');
+	console.log($scope.field.name);
+
+	// Get field data from FieldService module and set the data property on the scope.
+	$scope.readField = function() {
+		// FieldService.query({
+		// 	model_name: $scope.model_name,
+		// 	pk_id: 		$scope.pk_id,
+		// 	fieldname:  $scope.fieldname
+		// }, function(response) { for (var prop in response) { $scope.data[prop] = response[prop]; } });
+
+	}
+
+	$scope.readField();
 
 });
 

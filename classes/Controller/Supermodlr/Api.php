@@ -90,7 +90,65 @@ class Controller_Supermodlr_Api extends Controller {
 
         //return result     
         $this->response->body(json_encode($Model->to_array(TRUE, FALSE, TRUE)));
-    }   
+    }
+
+    public function action_field_data()
+    {
+
+        //get model name and class
+        $model_name = $this->model_name;
+        $model_class = $this->model_class;
+        
+        //get id from the url
+        $id = $this->request->param('id');
+
+        // Get field pkid, if one is present
+        $fieldname = $this->request->param('id_action');
+        
+
+        fbl($fieldname, 'fieldname');
+        
+        //load model by id
+        $Model = new $model_class($id);
+
+        if($Model->loaded())
+        {
+            $response = [];
+
+            //set all defaults on object
+            $Model->defaults();
+
+            //filter all values
+            $Model->filter();
+
+            $fields = $Model->get_fields();
+
+            if($fieldname && array_key_exists($fieldname, $fields))
+            {
+
+                $response = $fields[$fieldname]->to_array();
+               
+            }
+            else
+            {
+
+                foreach($fields as $key => $val) 
+                {
+                    $response[$key] = $val->to_array();
+                }
+            }
+
+        }
+        else
+        {
+            $response = array('status' => false);
+        }
+
+        //set content type header
+        $this->response->headers('content-type','application/json');        
+        $this->response->body(json_encode($response));
+
+    }
     
     public function action_update()
     {
