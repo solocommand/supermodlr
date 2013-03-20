@@ -1,5 +1,5 @@
 <?php
 if (!$field->hidden)
 { ?>
-	<dt class="label" title='<?=$field->description; ?>'><?=$field->label; ?></dt><?php
+	<dt class="label" ng-bind="field.name" title='<?=$field->description; ?>'></dt><?php
 }

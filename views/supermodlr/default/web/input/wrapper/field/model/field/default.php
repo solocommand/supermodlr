@@ -21,7 +21,8 @@
 
 ?>
 
-<dl class="dl-horizontal" style="<?= $style ?>" ng-controller="fieldCtrl" ng-init="field.name=<?=$field->path('_'); ?>">
+<dl class="dl-horizontal" style="<?= $style ?>" ng-hide="field.hidden">
+    <!-- field.hidden || (model.hasOwnProperty('extends') && typeof(model.extends) == null && field.value == 'Supermodlr_FIELD_VALUE_NOT_SET') -->
 
     <?= $view->get('label',$field); ?>
 

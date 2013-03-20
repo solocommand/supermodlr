@@ -62,14 +62,18 @@ angular.module('fieldService', ['ngResource']).factory('FieldService', function 
 
 /* CONTROLLERS */
 
-app.controller('supermodlrCtrl', function ($scope, ModelService) {
+app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 
 	// Initially populate scope with model name, id, and action
 	$scope.model_name = getModel();
 	$scope.pk_id 		= getModelId();
 	$scope.action 		= getAction();
 
-	$scope.readModel = function() {
+	$scope.model 		= {
+		fields: {},
+	};
+
+	$scope.getModel = function() {
 
 		// Get model from modelService service. Force read method, pass model name and ID.
 
@@ -77,16 +81,37 @@ app.controller('supermodlrCtrl', function ($scope, ModelService) {
 		ModelService.read({
 			model_name: $scope.model_name,
 			pk_id: 		$scope.pk_id
-		}, function(response) { for (var prop in response) { $scope[prop] = response[prop]; } });
+		}, function(response) { for (var prop in response) { $scope.model[prop] = response[prop]; } });
 
 	
+	}
+
+	$scope.getFields = function() {
+		FieldService.query({
+			model_name: $scope.model_name,
+			pk_id: 		$scope.pk_id,
+			// fieldname:  $scope.fieldname
+		}, function(response) { 
+			//console.log(response);
+			for (var field in response) {
+				var field_name = response[field].name;
+				// for (var key in response[field]) {
+				// 	$scope.model.fields[field_name][key] = response[field][key];
+				// }
+				$scope.model.fields[field_name] = response[field];	
+			//console.log($scope.model);
+			} 
+		});
 	}
 
 	$scope.save = function() {
 		ModelService.update();
 	}
 
-	$scope.readModel();
+	$scope.getModel();
+	$scope.getFields();
+
+	console.log($scope.model);
 
 
 
@@ -94,7 +119,7 @@ app.controller('supermodlrCtrl', function ($scope, ModelService) {
 
 	// Update scope with results from service.
 	//$scope.response 	= ModelService[$scope.action]();
-	console.log($scope);
+	//console.log($scope);
 
 });
 
@@ -113,15 +138,15 @@ app.controller('fieldCtrl', function ($scope, FieldService) {
 
 	// Get field data from FieldService module and set the data property on the scope.
 	$scope.readField = function() {
-		// FieldService.query({
-		// 	model_name: $scope.model_name,
-		// 	pk_id: 		$scope.pk_id,
-		// 	fieldname:  $scope.fieldname
-		// }, function(response) { for (var prop in response) { $scope.data[prop] = response[prop]; } });
+		FieldService.query({
+			model_name: $scope.model_name,
+			pk_id: 		$scope.pk_id,
+			fieldname:  $scope.fieldname
+		}, function(response) { for (var prop in response) { $scope.data[prop] = response[prop]; } });
 
 	}
 
-	$scope.readField();
+	//$scope.readField();
 
 });
 
