@@ -676,8 +676,6 @@ class Supermodlr_Field {
   public function to_array() {
 
 		foreach ($this as $col => $val) $response[$col] = $val;
-		fbl($this);
-
     return $response;
 
   }

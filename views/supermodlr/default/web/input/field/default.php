@@ -8,8 +8,7 @@ if (isset($field->values) && is_array($field->values) && count($field->values) >
     $input_type = 'select';
 
     $template = <<<EOT
-        <select ng-model="{$field->path('_')}">
-            <option ng-repeat="value in fields.{$field->path('_')}.values">{{value}}</option>
+        <select ng-model="model.{$field->path('_')}" ng-options="value for value in model.fields.{$field->path('_')}.values">
         </select>
 EOT;
 
@@ -58,7 +57,7 @@ else
 
     $template = <<<EOT
 
-        <input type="{$input_type}" ng-model="{$field->path('_')}" />
+        <input type="{$input_type}" ng-model="model['{$field->path('_')}']" />
 
 EOT;
 

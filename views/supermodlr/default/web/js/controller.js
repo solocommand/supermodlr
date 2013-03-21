@@ -108,15 +108,6 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 		ModelService.update();
 	}
 
-	$scope.getModel();
-	$scope.getFields();
-
-	console.log($scope.model);
-
-
-
-	
-
 	// Update scope with results from service.
 	//$scope.response 	= ModelService[$scope.action]();
 	//console.log($scope);
@@ -151,7 +142,27 @@ app.controller('fieldCtrl', function ($scope, FieldService) {
 });
 
 
-// app.directive('supermodlrForm', function supermodlrForm($scope) {
+/* DIRECTIVES */
+
+// angular.directive('initFields', function () {
+
+// 	return function (scope, element, attrs) {
+// 		console.log('here');
+// 	}
+
+// });
+
+app.directive('fieldInit', function () {
+   return function ($scope, element, attrs) {
+   	
+   	$scope.getModel();
+   	$scope.getFields();
+
+   	console.log($scope.model);
+
+   }
+});
+
 
 
 

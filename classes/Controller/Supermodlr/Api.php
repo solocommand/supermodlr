@@ -104,10 +104,7 @@ class Controller_Supermodlr_Api extends Controller {
 
         // Get field pkid, if one is present
         $fieldname = $this->request->param('id_action');
-        
-
-        fbl($fieldname, 'fieldname');
-        
+                
         //load model by id
         $Model = new $model_class($id);
 

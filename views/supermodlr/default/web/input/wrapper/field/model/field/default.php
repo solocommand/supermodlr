@@ -21,7 +21,7 @@
 
 ?>
 
-<dl class="dl-horizontal" style="<?= $style ?>" ng-hide="field.hidden">
+<dl class="dl-horizontal" style="<?= $style ?>">
     <!-- field.hidden || (model.hasOwnProperty('extends') && typeof(model.extends) == null && field.value == 'Supermodlr_FIELD_VALUE_NOT_SET') -->
 
     <?= $view->get('label',$field); ?>
