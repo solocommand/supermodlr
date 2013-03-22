@@ -57,7 +57,7 @@ else
 
     $template = <<<EOT
 
-        <input type="{$input_type}" ng-model="model['{$field->path('_')}']" />
+        <input type="{$input_type}" ng-model="model.{$field->path('_')}" />
 
 EOT;
 

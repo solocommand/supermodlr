@@ -19,7 +19,7 @@
 
 			<!--</fieldset>-->
 
-			<input class="form_submit_button" type="submit" ng-disabled="{{<?=$form_id ?>Form.$invalid || isUnchanged(<?=$form_id ?>Form)}}"/>
+			<input class="form_submit_button" type="submit" ng-click="save();" />
 		</form>
 
 	</div>

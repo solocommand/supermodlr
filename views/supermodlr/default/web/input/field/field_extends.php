@@ -1,5 +1,9 @@
-<input class='input' name="fields_autocomplete" id="<?=$form_id; ?>__field__extends__autocomplete" type="text"/>
-<input class='input' type="text" id="<?=$form_id; ?>__field__extends" name="field__extends" ng-model="data.field.extends" autocomplete="off" style="display: none" json="true"/>
+<input class='input' type="text" autocomplete="off" ng-model="model.extends" field-extends />
+
+
+
+<!--
+
 <ul id='<?=$form_id; ?>__field__extends__list'></ul>
 <script type="text/javascript">
 $("#<?=$form_id; ?>__field__extends__autocomplete").autocomplete({
@@ -116,3 +120,4 @@ if ($field->value_isset()) {
 ?>
 
 </script>
+-->

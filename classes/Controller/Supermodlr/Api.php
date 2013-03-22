@@ -100,7 +100,7 @@ class Controller_Supermodlr_Api extends Controller {
         $model_class = $this->model_class;
         
         //get id from the url
-        $id = $this->request->param('id');
+        $id = $this->request->param('id') || $model_name;
 
         // Get field pkid, if one is present
         $fieldname = $this->request->param('id_action');
@@ -108,7 +108,7 @@ class Controller_Supermodlr_Api extends Controller {
         //load model by id
         $Model = new $model_class($id);
 
-        if($Model->loaded())
+        if(class_exists($model_name)) //!$Model->loaded() === FALSE)
         {
             $response = [];
 

@@ -105,7 +105,19 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 	}
 
 	$scope.save = function() {
-		ModelService.update();
+		//ModelService.update();
+
+		if ($scope.model._id) {
+			ModelService.update({
+				model_name: $scope.model_name,
+				pk_id: 		$scope.pk_id
+			});
+		} else {
+			ModelService.create({
+				model_name: $scope.model_name
+			});
+		}
+
 	}
 
 	// Update scope with results from service.
@@ -161,6 +173,21 @@ app.directive('fieldInit', function () {
    	console.log($scope.model);
 
    }
+});
+
+app.directive('fieldExtends', function() {
+
+	return function ($scope, element, attrs) {
+
+		$scope.$watch(element, function(value) {
+			console.log(value);
+		});
+
+		console.log('@todo: handle extends in fieldExtends directive.');
+		console.log(attrs);
+
+	}
+
 });
 
 
