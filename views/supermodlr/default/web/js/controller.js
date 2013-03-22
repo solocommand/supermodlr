@@ -4,39 +4,6 @@ var app = angular.module('supermodlr', ['modelService', 'fieldService']);
 
 /* SERVICES */
 
-// angular.module('supermodlr.services', [])
-// 	.service('modelORM', function ($http) {
-
-// 		var read = function(model_name, action, pk_id) {
-
-// 			console.log('service read start');
-// 			console.log(model_name);
-// 			console.log(action);
-// 			console.log(pk_id);
-// 			console.log('service read done');
-
-// 			return true;
-			
-
-// 	// 	$http({
-//    //          method: 'get',
-//    //          url: 'http://ws.geonames.org/searchJSON?callback=JSON_CALLBACK',
-//    //          params: {
-//    //              featureClass: "P",
-//    //              style: "full",
-//    //              maxRows: 12,
-//    //              name_startsWith: request.destName
-//    //          }
-//    //      }).success(function (data, status) {
-//    //          console.log(data);
-//    //          response($.map(innerMatch(data.geonames), matcher));
-//    //      });
-
-// 		};
-
-// 	}
-// );
-
 angular.module('modelService', ['ngResource']).factory('ModelService', function ($resource) {
     return $resource(
     	'/supermodlr/api/:model_name/:action/:pk_id',
@@ -68,16 +35,26 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 	$scope.model_name = getModel();
 	$scope.pk_id 		= getModelId();
 	$scope.action 		= getAction();
+	console.log($scope.action);
 
 	$scope.model 		= {
+		name: '',
+		datatype: '',
+		storage: '',
+		required: false,
+		unique: false,
+		searchable: false,
+		filterable: false,
+		nullvalue: false,
 		fields: {},
 	};
+
+	$scope.invalid = true;
 
 	$scope.getModel = function() {
 
 		// Get model from modelService service. Force read method, pass model name and ID.
 
-		$scope.action = 'read';
 		ModelService.read({
 			model_name: $scope.model_name,
 			pk_id: 		$scope.pk_id
@@ -100,22 +77,30 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 				// }
 				$scope.model.fields[field_name] = response[field];	
 			//console.log($scope.model);
+
+			// @todo: Enable field validation rules. $watch element bound to field_name on scope for changes and init validation
 			} 
 		});
 	}
 
 	$scope.save = function() {
-		//ModelService.update();
+		
 
-		if ($scope.model._id) {
-			ModelService.update({
-				model_name: $scope.model_name,
-				pk_id: 		$scope.pk_id
-			});
+		var save_params = {};
+
+		for (var key in $scope.model) {
+			if (key == 'fields') {
+				continue;
+			}
+			save_params[key] = $scope.model[key];
+		}
+
+		save_params.model_name = $scope.model_name;
+
+		if (save_params._id) {
+			ModelService.update(save_params);
 		} else {
-			ModelService.create({
-				model_name: $scope.model_name
-			});
+			ModelService.create(save_params);
 		}
 
 	}
