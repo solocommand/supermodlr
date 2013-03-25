@@ -9,4 +9,4 @@ echo $view->get('field',$field);
 echo $view->get('errors',$field);
 echo $view->get('conditions',$field);
 ?>
-</div>
+</dl>

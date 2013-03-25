@@ -35,7 +35,6 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 	$scope.model_name = getModel();
 	$scope.pk_id 		= getModelId();
 	$scope.action 		= getAction();
-	console.log($scope.action);
 
 	$scope.model 		= {
 		name: '',
@@ -49,19 +48,24 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 		fields: {},
 	};
 
-	$scope.invalid = true;
-
-	$scope.getModel = function() {
-
-		// Get model from modelService service. Force read method, pass model name and ID.
-
-		ModelService.read({
+	$scope.model 		= ModelService.read({
 			model_name: $scope.model_name,
 			pk_id: 		$scope.pk_id
-		}, function(response) { for (var prop in response) { $scope.model[prop] = response[prop]; } });
+	});
 
-	
-	}
+	// $scope.getModel = function() {
+
+	// 	// Get model from modelService service. Force read method, pass model name and ID.
+
+	// 	$scope.model = ModelService.read({
+	// 		model_name: $scope.model_name,
+	// 		pk_id: 		$scope.pk_id
+	// 	}, function(response) { 
+	// 		//for (var prop in response) { $scope.model[prop] = response[prop]; } });
+	// 	});
+
+	// }
+
 
 	$scope.getFields = function() {
 		FieldService.query({
@@ -70,6 +74,7 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 			// fieldname:  $scope.fieldname
 		}, function(response) { 
 			//console.log(response);
+			$scope.model.fields = {};
 			for (var field in response) {
 				var field_name = response[field].name;
 				// for (var key in response[field]) {
@@ -83,25 +88,73 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 		});
 	}
 
+	$scope.save_handler = function (response) {
+		
+		if (response.status == true) {
+			//alert('model saved.');
+         $scope.$emit('saved', response);
+			window.location = document.referrer;
+		} else {
+			alert('Unable to save model.');
+			$scope.$emit('saved', response);
+			$scope.invalid(response);
+		}
+
+	}
+
 	$scope.save = function() {
 		
 
-		var save_params = {};
+		// var save_params = {};
+		// var response = {};
 
-		for (var key in $scope.model) {
-			if (key == 'fields') {
-				continue;
+		// for (var key in $scope.model) {
+		// 	if (key == 'fields') {
+		// 		continue;
+		// 	}
+		// 	save_params[key] = $scope.model[key];
+		// }
+
+		// save_params.model_name = $scope.model_name;
+		// save_params.pk_id = $scope.pk_id;
+
+
+		if($scope.supermodlrForm.$valid == true) {
+
+			if ($scope.model._id) {
+
+				var response = $scope.model.$update({
+					model_name: $scope.model_name, 
+					pk_id: $scope.model._id,
+				}, function(response) { $scope.save_handler(response); });
+
+			} else {
+
+				var response = $scope.model.$create({
+					model_name: $scope.model_name,
+				}, function(response) { $scope.save_handler(response); });
+
 			}
-			save_params[key] = $scope.model[key];
-		}
 
-		save_params.model_name = $scope.model_name;
-
-		if (save_params._id) {
-			ModelService.update(save_params);
 		} else {
-			ModelService.create(save_params);
+
+			// Validation notices should be displayed by the ng Form_Controller. Nothing to do.
+
 		}
+
+
+
+		//console.log(response);
+
+		// console.log(response);
+		// console.log(response.status);
+		// console.log(response.teaser);
+
+		// if (response.status) {
+		// 	alert('model was saved.');
+		// } else {
+		// 	alert('model was not saved.');
+		// }
 
 	}
 
@@ -152,7 +205,7 @@ app.controller('fieldCtrl', function ($scope, FieldService) {
 app.directive('fieldInit', function () {
    return function ($scope, element, attrs) {
    	
-   	$scope.getModel();
+   	//$scope.getModel();
    	$scope.getFields();
 
    	console.log($scope.model);

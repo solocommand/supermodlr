@@ -2,7 +2,7 @@
 
 <div class="angular_app_container" ng-app="supermodlr" ng-controller="supermodlrCtrl" run-ready>
 	<div id="form_container__supermodlr">
-		<form class="simple-form" ng-submit="save()" field-init>
+		<form class="simple-form" ng-submit="save()" name="supermodlrForm" field-init>
 
 			<!--<fieldset ng-repeat="field in model.fields">-->
 

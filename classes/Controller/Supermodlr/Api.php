@@ -75,7 +75,7 @@ class Controller_Supermodlr_Api extends Controller {
         $Model->cfg('external_api',TRUE);
         
         //ensure model loaded
-        if ($Model->loaded() === FALSE)
+        if (!class_exists($model_class))
         {
             //404 if model by this id doesn't exist @todo check/test 4xx exception logging
             $this->log_response('The requested :model with id :id was not found.',array(':model' => $model_name, ':id'=> $id));
