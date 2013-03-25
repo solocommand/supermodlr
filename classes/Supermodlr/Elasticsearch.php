@@ -254,25 +254,40 @@ class Supermodlr_Elasticsearch extends Supermodlr_Db {
 
 		// Create the actual search object with some data.
 		$Query = new Elastica\Query($QueryString);
-		fbl($skip, $limit);
+
 		$Query->setFrom($skip)->setLimit($limit);
 
 		// Search on the index.
 		$ResultSet = $this->index->search($Query);
-		fbl($ResultSet, 'results');
+		//fbl($ResultSet, 'results');
+		fbl($ResultSet->getTotalHits(), 'elasticsearch result count');
+		
 
 		// If $count === TRUE, return the number of hits
 		if ($count) 
 			return $ResultSet->getTotalHits();
 		
+		$result_set = [];
 
-		die();
+		// Return content in normalized content model
+		foreach ($ResultSet as $Result) {
+			$Content = Model_Content::factory($Result->getId());
+			if($Content->loaded()) {
+				fbl($Result->getId() . ' loaded');
+
+			}
+
+			$result_set[] = $Content->export();
+			
+		}
+		
 
 		// Increment read count
 		$this->reads++;
 
+fbl($result_set);
 		// Result sets should never be too big as they have to be loaded into memory
-		return $data_arry;
+		return $result_set;
 	}
 	
 	/**
