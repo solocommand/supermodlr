@@ -51,7 +51,7 @@ class Controller_Supermodlr_Api extends Controller {
         }
         else
         {
-            $Saved_status->data(NULL,$Model->to_array());
+            $Saved_status->data(NULL,$Model->export());
         }
         
         $this->log_response($Saved_status->to_json());
@@ -86,66 +86,12 @@ class Controller_Supermodlr_Api extends Controller {
         //set content type header
         $this->response->headers('content-type','application/json');        
         
-        $this->log_response(json_encode($Model->to_array(TRUE, FALSE, TRUE)));
+        $this->log_response(json_encode($Model->export()));
 
         //return result     
-        $this->response->body(json_encode($Model->to_array(TRUE, FALSE, TRUE)));
+        $this->response->body(json_encode($Model->export()));
     }
 
-    public function action_field_data()
-    {
-
-        //get model name and class
-        $model_name = $this->model_name;
-        $model_class = $this->model_class;
-        
-        //get id from the url
-        $id = $this->request->param('id') || $model_name;
-
-        // Get field pkid, if one is present
-        $fieldname = $this->request->param('id_action');
-                
-        //load model by id
-        $Model = new $model_class($id);
-
-        if(class_exists($model_name)) //!$Model->loaded() === FALSE)
-        {
-            $response = [];
-
-            //set all defaults on object
-            $Model->defaults();
-
-            //filter all values
-            $Model->filter();
-
-            $fields = $Model->get_fields();
-
-            if($fieldname && array_key_exists($fieldname, $fields))
-            {
-
-                $response = $fields[$fieldname]->to_array();
-               
-            }
-            else
-            {
-
-                foreach($fields as $key => $val) 
-                {
-                    $response[$key] = $val->to_array();
-                }
-            }
-
-        }
-        else
-        {
-            $response = array('status' => false);
-        }
-
-        //set content type header
-        $this->response->headers('content-type','application/json');        
-        $this->response->body(json_encode($response));
-
-    }
     
     public function action_update()
     {
@@ -195,7 +141,7 @@ class Controller_Supermodlr_Api extends Controller {
         }       
         else
         {
-            $Saved_status->data(NULL,$Model->to_array());   
+            $Saved_status->data(NULL,$Model->export());   
         }
         
         $this->log_response($Saved_status->to_json());    
@@ -244,7 +190,7 @@ class Controller_Supermodlr_Api extends Controller {
         }       
         else
         {
-            $Deleted_status->data(NULL,$Model->to_array()); 
+            $Deleted_status->data(NULL,$Model->export()); 
         }
         
         $this->log_response($Deleted_status->to_json());    
@@ -383,7 +329,7 @@ class Controller_Supermodlr_Api extends Controller {
         $field_name = $this->request->param('id');
 
         //build field class name
-        $field_class = 'Field_'.ucfirst(strtolower($this->model_name)).'_'.ucfirst(strtolower($field_name));
+        $field_class = 'Field_'.Supermodlr::get_name_case($this->model_name).'_'.Supermodlr::get_name_case($field_name);
 
         //get the field
         $Field = new $field_class();
@@ -408,13 +354,13 @@ class Controller_Supermodlr_Api extends Controller {
         {
 
             //build model class
-            $model_class = 'Model_'.ucfirst(strtolower($source['model']));
+            $model_class = 'Model_'.Supermodlr::get_name_case($source['model']);
 
             $model_label = $model_class::scfg('label');
 
             if ($model_label === NULL)
             {
-                $model_label = ucfirst(strtolower($source['model']));
+                $model_label = Supermodlr::get_name_case($source['model']);
             }
 
             //get additional where params if sent
@@ -557,7 +503,8 @@ class Controller_Supermodlr_Api extends Controller {
         else if ($action === 'create')
         {
             $form_action = 'create';
-            $New_Model = new $model_class();
+
+            $New_Model = $model_class::factory();
             $New_Model->cfg('external_api',TRUE);
 
             //look for additional data in query string so the form is preloaded
@@ -686,6 +633,67 @@ class Controller_Supermodlr_Api extends Controller {
         if(substr($json_str, 0, 3) == pack("CCC", 0xEF, 0xBB, 0xBF)) $json_str = substr($json_str, 3);
     
         return $json_str;
+    }
+
+    /**
+     * action_field_data API call
+     * Returns field data for supermodlr angular service fieldService.
+     * @param [optional] $fieldname as $id_action request parameter
+     * @return json_encodeded array of a single field (if $fieldname), or all fields.
+     */ 
+    public function action_field_data()
+    {
+
+        //get model name and class
+        $model_name = $this->model_name;
+        $model_class = $this->model_class;
+        
+        //get id from the url
+        $id = $this->request->param('id') || $model_name;
+
+        // Get field pkid, if one is present
+        $fieldname = $this->request->param('id_action');
+                
+        //load model by id
+        $Model = new $model_class($id);
+
+        if(class_exists($model_name)) //!$Model->loaded() === FALSE)
+        {
+            $response = [];
+
+            //set all defaults on object
+            $Model->defaults();
+
+            //filter all values
+            $Model->filter();
+
+            $fields = $Model->get_fields();
+
+            if($fieldname && array_key_exists($fieldname, $fields))
+            {
+
+                $response = $fields[$fieldname]->to_array();
+               
+            }
+            else
+            {
+
+                foreach($fields as $key => $val) 
+                {
+                    $response[$key] = $val->to_array();
+                }
+            }
+
+        }
+        else
+        {
+            $response = array('status' => false);
+        }
+
+        //set content type header
+        $this->response->headers('content-type','application/json');        
+        $this->response->body(json_encode($response));
+
     }
     
 
