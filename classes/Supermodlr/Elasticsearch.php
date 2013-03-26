@@ -90,6 +90,7 @@ class Supermodlr_Elasticsearch extends Supermodlr_Db {
 			else
 			{
 				// @todo Update existing index if necessary by comparing to new parameters
+				//$this->index_create();
 			}
 	}
 
@@ -322,7 +323,8 @@ fbl($result_set);
 
 		// Get the insert id from the primary db driver
 		// @todo Handle conversion for objects or other types (currently assuming a MongoId class)
-		$args['set']['_id'] = (string) $args['model']->get_primary_db()->insert_id();
+		$args['set']['_id'] = (string) $args['model']->pk_value();
+		fbl($args['set']['_id'], 'id');
 
 		// Pass to driver_update() method
 		return $this->driver_update($args);
@@ -393,9 +395,13 @@ fbl($result_set);
 			{
 				$property['type'] = 'integer';
 			}
+			elseif ($Field->datatype == 'boolean')
+			{
+				$property['type'] = 'boolean';
+			}
 			else
 			{
-				fbl($Field->datatype.' not defined!!!');
+				//fbl($Field->datatype.' not defined!!!');
 				continue;
 			}
 
