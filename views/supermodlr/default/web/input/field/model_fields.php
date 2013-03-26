@@ -1,7 +1,15 @@
-<input class='input' name="<?=$field->path('_'); ?>" type="text" autocomplete="model_fields" ng-model="model.<?= $field->path('_'); ?>" />
+<input class="hidden" name="<?=$field->path('_'); ?>" type="hidden" ng-model="model.<?=$field->path('_'); ?>" />
+<input class='input' name="<?=$field->path('_'); ?>_autocomplete" type="text" autocomplete="<?=$field->path('_'); ?>" />
 
-<ul>
+<ul ng-model="model.<?=$field->path('_'); ?>" ng-repeat="field in model.<?=$field->path('_'); ?>">
+    <li class="field">{{ field._id }} <a remove-item="{{ field }}">remove</a>
 </ul>
+
+<div class="container">
+    <div class="form"></div>
+</div>
+
+
 <!--
 <input class='input' type="text" id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>" name="<?=$field->get_model_name(); ?>__<?=$field->path('_'); ?>" ng-model="data.<?=$field->get_model_name(); ?>.<?=$field->path('.'); ?>" autocomplete="off" style="display: none" json="true"/>
 <div id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container" style="display:none">

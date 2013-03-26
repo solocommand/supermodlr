@@ -243,20 +243,26 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 		
 		var parent = $scope;
 		var scope = parent.$new();
+		var childcontainer = $('.container', target.parent());
+		var childform = $('.form', childcontainer);
 
-		var childform = $('.add_form', target);
+		console.log(scope);
+		console.log(field);
+		console.log(action);
 
-		console.log(childform);		
+		console.log(childcontainer);
+		console.log(childform);
 
-		
+		if (typeof scope.model._id == 'undefined' || !scope.model._id)
+		{
+			console.log('must save');
+			$(childform).html('You must save this model before fields can be added.');
+			$(childcontainer).dialog("open");
+			return false;
+		}
 
-		// if (typeof scope.data.<?=$field->get_model_name(); ?>._id == 'undefined' || !scope.data.<?=$field->get_model_name(); ?>._id)
-		// {
-		// 	$('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_form').html('You must save this model before fields can be added.');
-		// 	$("#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container").dialog("open");
-		// 	return false;
-		// }
-		// var id = scope.data.<?=$field->get_model_name(); ?>._id;
+		console.log('good to go');
+		//var id = scope.data.<?=$field->get_model_name(); ?>._id;
 
 		//     //empty existing options
 		//     $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_form').empty();
