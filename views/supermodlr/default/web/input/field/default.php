@@ -71,7 +71,7 @@ if (isset($field->values) && is_array($field->values) && count($field->values) >
     $input_type = 'select';
 
     $template = <<<EOT
-        <select name="{$field->path('_')}" ng-model="model.{$field->path('_')}" ng-options="value for value in model.fields.{$field->path('_')}.values" {$angular_validation} autocomplete="off">
+        <select name="{$field->path('_')}" ng-model="model.{$field->path('_')}" ng-options="value for value in model.fields.{$field->path('_')}.values" {$angular_validation} >
         </select>
 EOT;
 
@@ -121,7 +121,7 @@ else
 
     $template = <<<EOT
 
-        <input name="{$field->path('_')}" type="{$input_type}" ng-model="model.{$field->path('_')}" {$angular_validation} autocomplete="off" />
+        <input name="{$field->path('_')}" type="{$input_type}" ng-model="model.{$field->path('_')}" {$angular_validation} />
 
 EOT;
 

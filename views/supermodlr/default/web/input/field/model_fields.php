@@ -1,4 +1,8 @@
-<input class='input' name="<?=$field->path('_'); ?>_autocomplete" id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>__autocomplete" type="text"/>
+<input class='input' name="<?=$field->path('_'); ?>" type="text" autocomplete="model_fields" ng-model="model.<?= $field->path('_'); ?>" />
+
+<ul>
+</ul>
+<!--
 <input class='input' type="text" id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>" name="<?=$field->get_model_name(); ?>__<?=$field->path('_'); ?>" ng-model="data.<?=$field->get_model_name(); ?>.<?=$field->path('.'); ?>" autocomplete="off" style="display: none" json="true"/>
 <div id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container" style="display:none">
     <h3>Add Field</h3>
@@ -297,3 +301,4 @@ if ($field->value_isset())
 }
 
 ?></script>
+-->

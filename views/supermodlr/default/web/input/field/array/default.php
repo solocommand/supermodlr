@@ -4,7 +4,7 @@ if (isset($field->values) && is_array($field->values) && count($field->values) >
 {
     //
 ?><select ui-select2 class='input input-medium' id="<?=$form_id; ?>__field__<?=$field->path('_'); ?>" 
-name="field__<?=$field->path('_'); ?>" ng-model="data.<?=$field->get_model_name(); ?>.<?=$field->path('.'); ?>" 
+name="field__<?=$field->path('_'); ?>" ng-model="model.<?=$field->path('.'); ?>" 
 ng-init="<?=$field->get_model_name(); ?>.<?=$field->name; ?>='<?php 
 if ($field->value_isset()) 
     { 

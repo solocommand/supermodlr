@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('supermodlr', ['modelService', 'fieldService']);
+var app = angular.module('supermodlr', ['modelService', 'fieldService', 'ui.directives']);
 
 /* SERVICES */
 
@@ -36,36 +36,20 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 	$scope.pk_id 		= getModelId();
 	$scope.action 		= getAction();
 
-	$scope.model 		= {
-		name: '',
-		datatype: '',
-		storage: '',
-		required: false,
-		unique: false,
-		searchable: false,
-		filterable: false,
-		nullvalue: false,
+	$scope.autocompleteOptions = {
+
+	};
+
+	$scope.data = {};
+	$scope.data[$scope.model_name] = {
 		fields: {},
 	};
 
+	$scope.model 		= {};
 	$scope.model 		= ModelService.read({
 			model_name: $scope.model_name,
 			pk_id: 		$scope.pk_id
 	});
-
-	// $scope.getModel = function() {
-
-	// 	// Get model from modelService service. Force read method, pass model name and ID.
-
-	// 	$scope.model = ModelService.read({
-	// 		model_name: $scope.model_name,
-	// 		pk_id: 		$scope.pk_id
-	// 	}, function(response) { 
-	// 		//for (var prop in response) { $scope.model[prop] = response[prop]; } });
-	// 	});
-
-	// }
-
 
 	$scope.getFields = function() {
 		FieldService.query({
@@ -74,13 +58,13 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 			// fieldname:  $scope.fieldname
 		}, function(response) { 
 			//console.log(response);
-			$scope.model.fields = {};
+			//$scope.model.fields = {};
 			for (var field in response) {
 				var field_name = response[field].name;
 				// for (var key in response[field]) {
 				// 	$scope.model.fields[field_name][key] = response[field][key];
 				// }
-				$scope.model.fields[field_name] = response[field];	
+				$scope.data[$scope.model_name].fields[field_name] = response[field];	
 			//console.log($scope.model);
 
 			// @todo: Enable field validation rules. $watch element bound to field_name on scope for changes and init validation
@@ -143,24 +127,193 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 		}
 
 
+	}
 
-		//console.log(response);
+	
 
-		// console.log(response);
-		// console.log(response.status);
-		// console.log(response.teaser);
+	$scope.addField = function(struct, name) {
 
-		// if (response.status) {
-		// 	alert('model was saved.');
-		// } else {
-		// 	alert('model was not saved.');
+		console.log('@todo: Add field to model');
+
+		console.log(struct);
+		console.log(name);
+
+		// 	function <?=$form_id; ?>__<?=$field->path('_'); ?>__add(obj,label) {
+
+		//     var jq = $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>');  
+
+		//     //get the angular scope
+		//     var scope = angular.element(jq[0]).scope();
+
+		//     var exists = false;
+		//     //if the scope value has not been set yet or is null
+		//     if (typeof scope.data.<?=$field->get_model_name() ?>.<?=$field->path('.'); ?> == 'undefined' || scope.data.<?=$field->get_model_name() ?>.<?=$field->path('.'); ?> == null) {
+		//         //get current data from field__field
+		//         var json = jq.val();
+		//         if (typeof json != 'array') {
+		//             var arr = $.parseJSON(json);
+		//         } else {
+		//             var arr = json;
+
+		//         }
+		//     //if the scope already has a value
+		//     } else {
+		//         var arr = scope.data.<?=$field->get_model_name() ?>.<?=$field->path('.'); ?>;
+		//         for (var fi = 0; fi < arr.length; fi++) {
+		//             if (arr[fi]._id == obj._id) {
+		//                 exists = true;
+		//             }
+		//         }   
+		//     }
+		//     //if the stored data does not parse into a valid json object
+		//     if (!arr) {
+		//         //create empty object
+		//         arr = [];
+		//     }
+
+		//     if (!exists) {
+		//         //add selected field
+		//         arr.push(obj);
+		        
+		//         //convert field data to string
+		//         json = JSON.stringify(arr);
+
+		//         //set the string value to the input
+		//         jq.val(json);
+
+		//         //trigger input so angular detects the change
+		//         jq.trigger('input');
+
+		//         //set the object as the model.fields value
+		//         scope.data.<?=$field->get_model_name() ?>.<?=$field->path('.'); ?> = arr;
+
+		//     }
+		//     if ($('#<?=$form_id; ?>__<?=$field->path('_'); ?>__listitem__'+obj._id).length == 0) {
+		//         //add the ui element for this field
+		//         $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__list').append('<li id="<?=$form_id; ?>__<?=$field->path('_'); ?>__listitem__'+obj._id+'">'+label+' <a href=\'javascript:<?=$form_id; ?>__<?=$field->path('_'); ?>__remove("'+obj._id+'")\'>x</a></li>');
+		//     }
 		// }
 
 	}
 
-	// Update scope with results from service.
-	//$scope.response 	= ModelService[$scope.action]();
-	//console.log($scope);
+	$scope.removeField = function(id) {
+
+		console.log('@todo: remove field');
+
+
+		// function <?=$form_id; ?>__<?=$field->path('_'); ?>__remove(obj_id) {
+		//     $('#<?=$form_id; ?>__<?=$field->path('_'); ?>__listitem__'+obj_id).remove();
+
+		//     var jq = $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>');
+
+		//     var json = jq.val();
+
+		//     var scope = angular.element(jq[0]).scope();
+		//     var arr = scope.data.<?=$field->get_model_name() ?>.<?=$field->path('.'); ?>;
+
+		//     var new_arr = [];
+		//     //add all fields to array except the removed field
+		//     for (var fi = 0; fi < arr.length; fi++) {
+		//         if (arr[fi]._id != obj_id) {
+		//             new_arr.push(arr[fi]);
+		//         }
+		//     }   
+
+		//     //convert field data to string
+		//     json = JSON.stringify(new_arr);
+
+		//     //set the string value to the input
+		//     jq.val(json);
+
+		//     //trigger input so angular detects the change
+		//     jq.trigger('input');
+
+		//     //get the angular scope
+		//     var scope = angular.element(jq[0]).scope();
+
+		//     //set the object as the field.fields value
+		//     scope.data.<?=$field->get_model_name() ?>.<?=$field->path('.'); ?> = new_arr; 
+
+
+		// }
+
+	}
+
+	$scope.displayDetails = function(field, action, target) {
+		
+		var parent = $scope;
+		var scope = parent.$new();
+
+		var childform = $('.add_form', target);
+
+		console.log(childform);		
+
+		
+
+		// if (typeof scope.data.<?=$field->get_model_name(); ?>._id == 'undefined' || !scope.data.<?=$field->get_model_name(); ?>._id)
+		// {
+		// 	$('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_form').html('You must save this model before fields can be added.');
+		// 	$("#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container").dialog("open");
+		// 	return false;
+		// }
+		// var id = scope.data.<?=$field->get_model_name(); ?>._id;
+
+		//     //empty existing options
+		//     $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_form').empty();
+
+		//     //preloaded form with model already selected
+		//     var data = {"model":{"model":"model","_id":id}};
+
+		//     //modify field parameters before form is loaded @todo make this work on the api side
+		//     var fields = {"model": {"hidden": true}};
+
+		//     //add the name to the preloaded form
+		//     if (action == 'create') {
+		//         data.name = field.name;
+		//         var field_id = '*';
+		//     } else if (action == 'extend') {
+		//         var field_id = field._id;
+		//     }
+
+		//     //create a form for this field
+		//     $.ajax({
+		//         'url': '/supermodlr/api/field/form/'+field_id+'/'+action+'?data='+JSON.stringify(data),
+		//     }).done(function(response) {
+
+		//         //load the form
+		//         $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_form').html(response.html);
+
+		//         angular.bootstrap($('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_form .angular_app_container')[0],window[response.form_id+'_angular_modules']);
+
+		//         //force-fix model json @todo why do i have to do this hack?? cannot reproduce this problem on jsfiddle: http://jsfiddle.net/EckUe/
+		//         var scope = angular.element($('#'+response.form_id+'__field__name')[0]).scope();
+		//         for (prop in scope.data.field) {
+		//             if (typeof scope.data.field[prop] == 'string' && scope.data.field[prop].indexOf('{') == 0) {
+		//                 //attempt to decode this potential json string
+		//                 try {
+		//                     var obj = $.parseJSON(scope.data.field[prop]);
+		//                     scope.data.field[prop] = obj;
+		//                 } catch (e) {
+
+		//                 }
+		//             }
+		//         }
+
+		//         //hide the submit button
+		//         $('#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_form .form_submit_button').hide();
+
+		//     }); 
+
+		//     $("#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container").dialog("open");
+
+
+		// }
+
+	}
+
+
+
+
 
 });
 
@@ -176,16 +329,6 @@ app.controller('fieldCtrl', function ($scope, FieldService) {
 
 	console.log('fieldname scope prop');
 	console.log($scope.field.name);
-
-	// Get field data from FieldService module and set the data property on the scope.
-	$scope.readField = function() {
-		FieldService.query({
-			model_name: $scope.model_name,
-			pk_id: 		$scope.pk_id,
-			fieldname:  $scope.fieldname
-		}, function(response) { for (var prop in response) { $scope.data[prop] = response[prop]; } });
-
-	}
 
 	//$scope.readField();
 
@@ -224,6 +367,145 @@ app.directive('fieldExtends', function() {
 		console.log('@todo: handle extends in fieldExtends directive.');
 		console.log(attrs);
 
+	}
+
+});
+
+app.directive('autocomplete', function($http, $rootScope) {
+
+	return function ($scope, element, attrs) {
+
+		console.log('@todo: Clear autocomplete field on init');
+
+		$scope.$watch('model.' + attrs.name, function(value) {
+
+			element.autocomplete({
+				minLength: 2,
+				source: function(request, response) {
+
+					var url = getAPIPath() + '/field/query/?q=' + '{"where":{"name":{"\$regex":"/^' + request.term + '.*/i"},"$or":[{"model":null},{"model._id":"' + $scope.model._id + '"}]}}';
+
+					$http.get(url).success( function(data) {
+
+						// Store UI values in ui_data to be returned to autocompleter.
+						var ui_data = [];
+
+						// Add 'add' option to list of options.
+						ui_data.push({'_id': null,'label': 'Add '+request.term, 'field': {'name': request.term}, 'action': 'create'});
+
+						var arr = $scope.data[$scope.model_name].fields;
+						
+						// if the stored data does not parse into a valid json object create an empty object
+						if (!arr) {
+
+						   arr = [];
+						}
+
+						for (var i = 0; i < data.length; i++) {
+
+						   //ensure that this value isn't already set as a field
+
+						   for (var fi = 0; fi < arr.length; fi++) {
+						       if (arr[fi]._id == data[i]._id) {
+						           continue;
+						       }
+						   }
+						   if (data[i].model == null) {
+						       //add this field as a valid selection to the autocomplete select options
+						       ui_data.push({'_id': data[i]._id,'label': 'Extend '+data[i].name, 'field': data[i], 'action': 'extend'});                          
+						   } else if (typeof data[i].model == 'object') {
+						       ui_data.push({'_id': data[i]._id,'label': 'Use '+data[i].name, 'field': data[i], 'action': 'use'});                            
+						   }
+
+						}
+
+						response(ui_data);
+
+					});
+
+				},
+            select: function( event, ui ) {
+
+            	console.log('selected');
+            	console.log(ui.item.action);
+
+					if (ui.item.action == 'extend' || ui.item.action == 'create') {
+
+						console.log('extending');
+
+						$scope.displayDetails(ui.item.field, ui.item.action, element);
+
+						console.log('done extending');
+
+                } else if (ui.item.action == 'use') {
+
+                  $scope.addField({"model": "field", "_id": ui.item.field._id},ui.item.field.name);
+
+                }
+
+                return false;
+
+            }
+			});
+
+		});
+
+		// element.autocomplete({
+		// 	minLength: 2,
+			
+		// 	source: function (request, response) {
+
+		// 		var url = getAPIPath() + '/field/query/?q={"where":{"name":{"\$regex":"/^' + request.term + '.*/i"},"$or":[{"model":null},{"model._id":"' + id + '"}]}}';
+
+		// 		$http.get(url).success( function(data) {
+
+					// // Add 'add' option
+					// data.push({'_id': null,'label': 'Add '+request.term, 'field': {'name': request.term}, 'action': 'create'});
+
+
+
+		// 			response(data.results);
+
+  //           });
+
+		// 	},
+
+		// 	focus:function (event, ui) {
+  //               // element.val(ui.item.label);
+  //               // return false;
+  //        },
+
+  //        select:function (event, ui) {
+  //   //      	console.log('selected ' + ui.item.value);
+
+		// 		// scope.myModelId.selected = ui.item.value;
+		// 		// scope.$apply;
+		// 		// return false;
+  //        },
+
+  //        change:function (event, ui) {
+  //               // if (ui.item === null) {
+  //               //     scope.myModelId.selected = null;
+  //               // }
+  //        }
+
+		// });
+
+		// element.data("uiAutocomplete")._renderItem = function (ul, item) {
+
+		// 	return $("<li></li>")
+		// 		.data("item.autocomplete", item)
+		// 		.append("<a>" + item.label + "</a>")
+		// 		.appendTo(ul);
+		// };
+
+		// $scope.$watch(element, function(value) {
+		// 	console.log(value);
+		// });
+
+
+
+		console.log('@todo: Handle fields autocompleter.')
 	}
 
 });
