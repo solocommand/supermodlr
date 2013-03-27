@@ -1,11 +1,11 @@
 <input class="hidden" name="<?=$field->path('_'); ?>" type="hidden" ng-model="model.<?=$field->path('_'); ?>" />
 <input class='input' name="<?=$field->path('_'); ?>_autocomplete" type="text" autocomplete="<?=$field->path('_'); ?>" />
 
-<ul ng-model="model.<?=$field->path('_'); ?>" ng-repeat="field in model.<?=$field->path('_'); ?>">
-    <li class="field">{{ field._id }} <a remove-item="{{ field }}">remove</a>
+<ul ng-model="model.<?=$field->path('_'); ?>">
+    <li ng-repeat="field in model.<?=$field->path('_'); ?>" class="field">{{ field._id }} <a remove-item="{{ field }}">remove</a>
 </ul>
 
-<div class="container">
+<div class="container" style="display: none;">
     <div class="form"></div>
 </div>
 
