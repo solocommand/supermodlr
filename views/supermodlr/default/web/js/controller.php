@@ -1,13 +1,13 @@
 <?php
 
-    $controller->js('lib/angularjs/angular.min.js','headertags'); 
-    $controller->js('lib/angularui/build/angular-ui.min.js','headertags');  
-    $controller->js('lib/angularjs/angular-resource.min.js','headertags');  
-    //$controller->js('lib/select2/select2.js','headertags');
-    $controller->js('lib/crypto-js/md5.js','headertags');   
+    $controller->js('supermodlr/lib/angularjs/angular.min.js','headertags'); 
+    $controller->js('supermodlr/lib/angularui/build/angular-ui.min.js','headertags');  
+    $controller->js('supermodlr/lib/angularjs/angular-resource.min.js','headertags');  
+    //$controller->js('supermodlrlib/select2/select2.js','headertags');
+    $controller->js('supermodlr/lib/crypto-js/md5.js','headertags');   
 
-    $controller->js('/modules/supermodlr/lib/jqueryui/js/jquery-1.8.2.js');
-    $controller->js('/modules/supermodlr/lib/jqueryui/js/jquery-ui-1.9.2.custom.min.js');
+    $controller->js('supermodlr/lib/jqueryui/js/jquery-1.8.2.js');
+    $controller->js('supermodlr/lib/jqueryui/js/jquery-ui-1.9.2.custom.min.js');
 
     $controller->css('/modules/supermodlr/lib/select2/select2.css');
     $controller->css('/modules/supermodlr/lib/jqueryui/css/base/minified/jquery-ui.min.css');   

@@ -1,4 +1,4 @@
-<?=$view->get_view('js/controller'); ?>
+
 
 <div class="angular_app_container" ng-app="supermodlr" ng-controller="supermodlrCtrl" run-ready>
 	<div id="form_container__supermodlr">
