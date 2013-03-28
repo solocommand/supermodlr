@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('supermodlr', ['modelService', 'fieldService', 'ui.directives']);
+var app = angular.module('supermodlr', ['modelService', 'fieldService']);
 
 /* SERVICES */
 
@@ -257,38 +257,7 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 		var parent = $scope;
 		var scope = parent.$new();
 		var childcontainer = $('.container', target.parent());
-		var childform = $('.form', childcontainer);
 
-		console.log(scope);
-		console.log(field);
-		console.log(action);
-
-		console.log(childcontainer);
-		console.log(childform);
-
-		if (typeof scope.model._id == 'undefined' || !scope.model._id)
-		{
-			console.log('must save');
-			$(childform).html('You must save this model before fields can be added.');
-			$(childcontainer).dialog({height: 210, modal: true, buttons: {Ok: function() { $(this).dialog("close"); } } }).dialog("show");
-			return false;
-		}
-
-
-		// Reference parent model _id
-		var id = scope.model._id;
-
-		// Clear the form in case it's been used before.
-		$(childform).empty();
-
-		// Preload form with model already selected
-		var data = {"model":{"model":"model","_id":id}};
-
-		// Modify field parameters before form is loaded
-		// @todo: make this work on the api side ??
-		var fields = {"model": {"hidden": true}};
-
-		// Add the name to the preloaded form
 		if (action == 'create') {
 
 			data.name = field.name;
@@ -299,93 +268,139 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 			var field_id = field._id;
 		}
 
+		var form = $('<div></div>');
+		form.attr('id', field_id+'_ngForm');
+		form.appendTo($('body'));
+
+
+		if (typeof scope.model._id == 'undefined' || !scope.model._id)
+		{
+			console.log('must save');
+			form.html('You must save this model before fields can be added.');
+			$(childcontainer).dialog({height: 210, modal: true, buttons: {Ok: function() { $(this).dialog("close"); } } }).dialog("show");
+			return false;
+		}
+
+		
+			// Initialize and display modal
+			form.css('display', 'inherit').dialog({
+	    		autoOpen: true,
+	    		height: 600,
+			   width: 600,
+			   modal: true,
+			   buttons: {
+
+			   	"Add Field": function() {
+
+			   		alert('adding field');
+
+		            // var jq = $('#<?=$form_id; ?>__field__name');
+
+			            // //get the angular scope
+			            // var scope = angular.element(jq[0]).scope();
+
+			            // if (typeof scope.data.<?=$field->get_model_name() ?>._id == 'undefined' || !scope.data.<?=$field->get_model_name() ?>._id)
+			            // { 
+			            //     $("#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container").dialog( "close" );   
+			            //     return false;       
+			            // }
+
+			            // var sub_field_scope = angular.element($("#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container div.ng-scope")[0]).scope();
+			            // sub_field_scope.modal_form = true;
+			            // //when the sub field is saved
+			            // sub_field_scope.$on('saved',function(e,response) {
+			            //     //push the new id into the scope
+			            //     //sub_field_scope.data.field.fields.push(response._id);
+			            //     if (typeof response.data.label != 'undefined') {
+			            //         var label = response.data.label;
+			            //     } else if (typeof response.data.name != 'undefined') {
+			            //         var label = response.data.name;
+			            //     } else {
+			            //         var label = response.data._id;
+			            //     }
+			                
+			            //     <?=$form_id; ?>__<?=$field->path('_'); ?>__add({"_id": response.data._id,"model": "field"},label);    
+			                            
+			            //     //close the dialog
+			            //     $("#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container").dialog( "close" );
+			            // });
+
+			            // //submit the sub form
+			            // sub_field_scope.submit();
+
+		            $(this).dialog("close");
+
+	        		}
+	    		},
+			});
+
+
+		// Reference parent model _id
+		var id = scope.model._id;
+
+		// Preload form with model already selected
+		var data = {"model":{"model":"model","_id":id}};
+
+		// Modify field parameters before form is loaded
+		// @todo: make this work on the api side ??
+		var fields = {"model": {"hidden": true}};
+
+		// Add the name to the preloaded form
+
+
 		// @todo: Build new form in angular. For now, pull from field api
 
 		$.ajax({
 		  'url': '/supermodlr/api/field/form/'+field_id+'/'+action+'?data='+JSON.stringify(data),
 		}).done(function(response) {
 
-			console.log(childform);
+			console.log('Child Model Init');
 
-			//load the form
-			$(childform).html(response.html);
 
-			//angular.bootstrap($('.angular_app_container', childform)[0], window[response.form_id+'_angular_modules']);
+			form.html(response.html);
 
-			// //force-fix model json @todo why do i have to do this hack?? cannot reproduce this problem on jsfiddle: http://jsfiddle.net/EckUe/
-		 //  	var scope = angular.element($('#'+response.form_id+'__field__name')[0]).scope();
-		 //  	for (prop in scope.data.field) {
-		 //      if (typeof scope.data.field[prop] == 'string' && scope.data.field[prop].indexOf('{') == 0) {
-		 //         //attempt to decode this potential json string
-		 //         try {
-		 //   	         var obj = $.parseJSON(scope.data.field[prop]);
-		 //      	      scope.data.field[prop] = obj;
-		 //         } catch (e) {
+			// Do ang init shit
 
-		 //         	console.log('Unable parse form JSON');
-		 //         	console.log(e);
+			var childScope = $scope.$new(true);
 
-		 //         }
-		 //      }
-		 //  }
+			// // // Compile the child ng App
+			// // var fnLink = $compile(form);
 
-		  //hide the submit button
-		  // $('.form_submit_button', childform).hide();
+			// // // Link child ng App
+			// // fnLink(childScope);
+
+			console.log('bootstrapping');
+
+			$injector = angular.bootstrap($('.angular_app_container', form), ['modelService', 'fieldService']);
+
+			console.log('done bootstrapping');
+
+
+
+			
+				//angular.bootstrap($('.angular_app_container', childform)[0], window[response.form_id+'_angular_modules']);
+
+				// //force-fix model json @todo why do i have to do this hack?? cannot reproduce this problem on jsfiddle: http://jsfiddle.net/EckUe/
+			 //  	var scope = angular.element($('#'+response.form_id+'__field__name')[0]).scope();
+			 //  	for (prop in scope.data.field) {
+			 //      if (typeof scope.data.field[prop] == 'string' && scope.data.field[prop].indexOf('{') == 0) {
+			 //         //attempt to decode this potential json string
+			 //         try {
+			 //   	         var obj = $.parseJSON(scope.data.field[prop]);
+			 //      	      scope.data.field[prop] = obj;
+			 //         } catch (e) {
+
+			 //         	console.log('Unable parse form JSON');
+			 //         	console.log(e);
+
+			 //         }
+			 //      }
+			 //  }
+
+			  //hide the submit button
+			  // $('.form_submit_button', childform).hide();
 
 		}); 
-
-		// Initialize and display modal
-
-		$(childform).css('display', 'inherit').dialog({
-    		autoOpen: true,
-    		height: 600,
-		   width: 600,
-		   modal: true,
-		   buttons: {
-
-		   	"Add Field": function() {
-
-		   		alert('adding field');
-
-	            // var jq = $('#<?=$form_id; ?>__field__name');
-
-		            // //get the angular scope
-		            // var scope = angular.element(jq[0]).scope();
-
-		            // if (typeof scope.data.<?=$field->get_model_name() ?>._id == 'undefined' || !scope.data.<?=$field->get_model_name() ?>._id)
-		            // { 
-		            //     $("#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container").dialog( "close" );   
-		            //     return false;       
-		            // }
-
-		            // var sub_field_scope = angular.element($("#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container div.ng-scope")[0]).scope();
-		            // sub_field_scope.modal_form = true;
-		            // //when the sub field is saved
-		            // sub_field_scope.$on('saved',function(e,response) {
-		            //     //push the new id into the scope
-		            //     //sub_field_scope.data.field.fields.push(response._id);
-		            //     if (typeof response.data.label != 'undefined') {
-		            //         var label = response.data.label;
-		            //     } else if (typeof response.data.name != 'undefined') {
-		            //         var label = response.data.name;
-		            //     } else {
-		            //         var label = response.data._id;
-		            //     }
-		                
-		            //     <?=$form_id; ?>__<?=$field->path('_'); ?>__add({"_id": response.data._id,"model": "field"},label);    
-		                            
-		            //     //close the dialog
-		            //     $("#<?=$form_id; ?>__field__<?=$field->path('_'); ?>__add_container").dialog( "close" );
-		            // });
-
-		            // //submit the sub form
-		            // sub_field_scope.submit();
-
-	            $(this).dialog("close");
-
-        		}
-    		},
-		});
 
 	}
 
@@ -505,16 +520,16 @@ app.directive('autocomplete', function($http, $rootScope) {
 				},
             select: function( event, ui ) {
 
-            	console.log('selected');
-            	console.log(ui.item.action);
+            	// console.log('selected');
+            	// console.log(ui.item.action);
 
 					if (ui.item.action == 'extend' || ui.item.action == 'create') {
 
-						console.log('extending');
+						// console.log('extending');
 
 						$scope.displayDetails(ui.item.field, ui.item.action, element);
 
-						console.log('done extending');
+						// console.log('done extending');
 
                 } else if (ui.item.action == 'use') {
 
