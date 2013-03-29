@@ -73,6 +73,8 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 			pk_id: 		$scope.pk_id
 	});
 
+	$scope.modal_form_key = 'test';
+
 	// Gets field meta info from the field_data API method.
 	$scope.getFields = function() {
 
@@ -359,19 +361,21 @@ app.controller('supermodlrCtrl', function ($scope, ModelService, FieldService) {
 
 			form.html(response.html);
 
+			var app_container = $('.angular_app_container', form);
+
 			// Do ang init shit
 
 			var childScope = $scope.$new(true);
 
-			// // // Compile the child ng App
-			// // var fnLink = $compile(form);
+			// Compile the child ng App
+			var fnLink = $compile(form);
 
-			// // // Link child ng App
-			// // fnLink(childScope);
+			// Link child ng App
+			fnLink(childScope);
 
 			console.log('bootstrapping');
 
-			$injector = angular.bootstrap($('.angular_app_container', form), ['modelService', 'fieldService']);
+			// $injector = angular.bootstrap($('.angular_app_container', form), ['modelService', 'fieldService']);
 
 			console.log('done bootstrapping');
 
@@ -527,13 +531,19 @@ app.directive('autocomplete', function($http, $rootScope) {
 
 						// console.log('extending');
 
-						$scope.displayDetails(ui.item.field, ui.item.action, element);
+						// $scope.displayDetails(ui.item.field, ui.item.action, element);
+						
+						$scope.modal_action   = ui.item.action;
+						$scope.modal_form_key = ui.item.field;
+						$scope.$apply();
 
 						// console.log('done extending');
 
                 } else if (ui.item.action == 'use') {
 
                   $scope.addField({"model": "field", "_id": ui.item.field._id},ui.item.field.name);
+
+                  // @todo: addField();
 
                 }
 
@@ -601,6 +611,29 @@ app.directive('autocomplete', function($http, $rootScope) {
 
 		console.log('@todo: Handle fields autocompleter.')
 	}
+
+});
+
+// Tracks changes to the $scope.modal_form_key property, set by the autocompleter directive.
+app.directive('modalForm', function () {
+
+	return function ($scope, element, attrs) {
+
+		$scope.$watch('modal_form_key', function(value) {
+			
+			console.log('modal form key:');
+			console.log($scope.modal_form_key);
+
+			console.log('modal action');
+			console.log($scope.modal_action);
+
+			// Render a new form using fieldService (yay!) and isolate scope
+
+			// @todo: This. :/
+
+		});
+
+	};
 
 });
 
